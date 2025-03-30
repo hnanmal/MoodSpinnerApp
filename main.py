@@ -1,4 +1,4 @@
-# Mood Spinner: Kivy 필터로 단계별 배경색 연출 추가
+# Mood Spinner: 단계별 배경색 연출 (Result 화면 필터 제거)
 
 import os
 import json
@@ -12,6 +12,8 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from kivy.clock import Clock
+
+from utils.share_utils import save_result_screenshot
 
 # 경로 및 설정
 BASE_DIR = os.path.dirname(__file__)
@@ -86,7 +88,7 @@ class MainScreen(Screen):
             return False
         else:
             self.final_mood = random.choice(MOODS)
-            self.label.text = f"{self.final_mood}"
+            self.label.text = f"🤔 {self.final_mood}"
             self.spin_count += 1
 
     def go_to_planner(self, instance):
@@ -122,11 +124,10 @@ class StepScreen(Screen):
         self.stage = stage
         self.layout = FloatLayout()
 
-        # 단계별 필터 색 지정
         stage_color = {
-            "start": (1, 1, 1, 1),  # 아침 느낌
-            "middle": (1, 0.95, 0.85, 1),  # 노란 따뜻한 톤
-            "end": (0.85, 0.9, 1, 1),  # 저녁 느낌
+            "start": (1, 1, 1, 1),
+            "middle": (1, 0.95, 0.85, 1),
+            "end": (0.85, 0.9, 1, 1),
         }.get(stage, (1, 1, 1, 1))
 
         self.bg = Image(
@@ -176,7 +177,6 @@ class ResultScreen(Screen):
             keep_ratio=False,
             size_hint=(1, 1),
             pos_hint={"x": 0, "y": 0},
-            color=(0.9, 0.9, 1, 1),
         )
         layout.add_widget(self.bg)
 
@@ -202,6 +202,15 @@ class ResultScreen(Screen):
         back_btn.bind(on_release=go_home)
         layout.add_widget(back_btn)
 
+        share_btn = Button(
+            text="이미지로 저장하기",
+            size_hint=(0.5, 0.08),
+            pos_hint={"center_x": 0.5, "y": 0.15},
+            font_name="KoreanFont",
+        )
+        share_btn.bind(on_release=lambda instance: save_result_screenshot())
+        layout.add_widget(share_btn)
+
         self.add_widget(layout)
 
     def on_pre_enter(self):
@@ -209,8 +218,7 @@ class ResultScreen(Screen):
         m = planner_choices["middle"]
         e = planner_choices["end"]
         mood = App.get_running_app().selected_mood
-        # text = f"오늘의 기분: {mood}\n\n하루 이렇게 보내보는 건 어때요?\n\n✔️ 아침 – {s}\n✔️ 낮 – {m}\n✔️ 밤 – {e}"
-        text = f"오늘의 기분: {mood}\n\n하루 이렇게 보내보는 건 어때요?\n\n 아침 – {s}\n 낮 – {m}\n 밤 – {e}"
+        text = f"오늘의 기분: {mood}\n\n하루 이렇게 보내보는 건 어때요?\n- 아침 – {s}\n✔️ 낮 – {m}\n✔️ 밤 – {e}"
         self.label.text = text
 
 
