@@ -14,9 +14,6 @@ from kivy.core.text import LabelBase
 from kivy.clock import Clock
 
 from utils.share_utils import save_result_screenshot
-import openai  # OpenAI API
-
-from utils.poem_utils import generate_poem_with_openai
 
 # 경로 및 설정
 BASE_DIR = os.path.dirname(__file__)
@@ -29,8 +26,6 @@ Window.size = (360, 780)
 
 MOODS = ["열정", "나른함", "영감", "여유", "냉정", "현타"]
 planner_choices = {"start": None, "middle": None, "end": None}
-
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 class MainScreen(Screen):
@@ -195,16 +190,6 @@ class ResultScreen(Screen):
         )
         layout.add_widget(self.label)
 
-        self.poem_label = Label(
-            text="",
-            font_size=16,
-            font_name="KoreanFont",
-            pos_hint={"center_x": 0.5, "center_y": 0.4},
-            size_hint=(0.9, None),
-            color=(0, 0, 0, 1),
-        )
-        layout.add_widget(self.poem_label)
-
         def go_home(instance):
             App.get_running_app().root.current = "main"
 
@@ -226,15 +211,6 @@ class ResultScreen(Screen):
         share_btn.bind(on_release=lambda instance: save_result_screenshot())
         layout.add_widget(share_btn)
 
-        poem_btn = Button(
-            text="오늘을 시로 표현해줘",
-            size_hint=(0.5, 0.08),
-            pos_hint={"center_x": 0.5, "y": 0.25},
-            font_name="KoreanFont",
-        )
-        poem_btn.bind(on_release=self.generate_poem)
-        layout.add_widget(poem_btn)
-
         self.add_widget(layout)
 
     def on_pre_enter(self):
@@ -244,20 +220,13 @@ class ResultScreen(Screen):
         mood = App.get_running_app().selected_mood
         text = f"""
 오늘의 기분: {mood}
-
 하루 이렇게 보내보는 건 어때요?
-    아침 – {s}
-    낮 – {m}
-    밤 – {e}
-""".strip()
-        self.label.text = text
 
-    def generate_poem(self, instance):
-        mood = App.get_running_app().selected_mood
-        s = planner_choices["start"]
-        m = planner_choices["middle"]
-        e = planner_choices["end"]
-        self.poem_label.text = generate_poem_with_openai(mood, s, m, e)
+    » 아침 – {s}
+    » 낮 – {m}
+    » 밤 – {e}
+"""
+        self.label.text = text.strip()
 
 
 class MoodPlannerApp(App):
