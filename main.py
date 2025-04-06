@@ -3,6 +3,7 @@
 import os
 import json
 import random
+from utils.fonts import FONT_PATH  # font_name="KoreanFont" 쓰기 전에 호출되기만 하면 됨
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -13,14 +14,15 @@ from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from kivy.clock import Clock
 
+
 from utils.share_utils import save_result_screenshot
-import openai  # OpenAI API
+# import openai  # OpenAI API
 
 from utils.poem_utils import generate_poem_with_openai
 
 # 경로 및 설정
 BASE_DIR = os.path.dirname(__file__)
-FONT_PATH = os.path.join(BASE_DIR, "resources", "fonts", "malgunsl.ttf")
+# FONT_PATH = os.path.join(BASE_DIR, "resources", "fonts", "malgunsl.ttf")
 CHOICE_FILE = os.path.join(BASE_DIR, "resources", "choices.json")
 BG_IMAGE = os.path.join(BASE_DIR, "resources", "images", "background_main.png")
 
@@ -30,7 +32,7 @@ Window.size = (360, 780)
 MOODS = ["열정", "나른함", "영감", "여유", "냉정", "현타"]
 planner_choices = {"start": None, "middle": None, "end": None}
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 class MainScreen(Screen):

@@ -1,14 +1,14 @@
 import os
-import openai
+# import openai
 
 # 안전하게 OpenAI 클라이언트 설정
 api_key = os.getenv("OPENAI_API_KEY")
 client = None
 
-if not api_key:
-    print("[경고] OPENAI_API_KEY 환경변수가 설정되지 않았습니다.")
-else:
-    client = openai.OpenAI(api_key=api_key)
+# if not api_key:
+#     print("[경고] OPENAI_API_KEY 환경변수가 설정되지 않았습니다.")
+# else:
+#     client = openai.OpenAI(api_key=api_key)
 
 
 def generate_poem_with_openai(mood, s, m, e):
